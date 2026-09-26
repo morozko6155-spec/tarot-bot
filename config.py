@@ -11,9 +11,8 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # Дешёвая модель проверяет вопрос, более сильная пишет толкование.
 # Укажите актуальные названия моделей из вашего аккаунта OpenAI.
 MODEL_VALIDATE = os.getenv("OPENAI_MODEL_VALIDATE", "gpt-4o-mini")
-MODEL_READING = os.getenv("OPENAI_MODEL_READING", "gpt-4o")
-# Короткий бесплатный тизер можно генерировать дешёвой моделью.
-MODEL_TEASER = os.getenv("OPENAI_MODEL_TEASER", MODEL_VALIDATE)
+MODEL_READING  = os.getenv("OPENAI_MODEL_READING", "gpt-4o-mini")
+MODEL_TEASER   = os.getenv("OPENAI_MODEL_TEASER", "gpt-4o-mini")
 
 # --- Бесплатный лимит ---
 # FREE_MODE=total  -> FREE_READINGS бесплатных тизеров на всё время (пробный период)
