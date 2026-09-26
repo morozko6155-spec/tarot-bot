@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- Секреты ---
-BOT_TOKEN = os.getenv("8867860123:AAGvNpJwnAN20AbTZti_q-WwxImdlztJe8I")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 print("TOKEN:", repr(BOT_TOKEN))
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # --- Модели OpenAI ---
