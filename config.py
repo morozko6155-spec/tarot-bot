@@ -6,6 +6,7 @@ load_dotenv()
 
 # --- Секреты ---
 BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+print("TOKEN:", repr(BOT_TOKEN))
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # --- Модели OpenAI ---
 # Дешёвая модель проверяет вопрос, более сильная пишет толкование.
