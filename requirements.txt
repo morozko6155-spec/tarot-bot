@@ -1,3 +1,4 @@
-aiogram
-openai
-python-dotenv
+aiogram>=3.13,<4
+openai>=1.50
+aiosqlite>=0.20
+python-dotenv>=1.0
