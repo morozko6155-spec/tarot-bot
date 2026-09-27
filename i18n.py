@@ -1,24 +1,24 @@
 """Локализация статических сообщений бота (ru / tr / en) и слов-триггеров «полного разбора».
-
+ 
 Тексты, которые пишет OpenAI, локализуются самой моделью (см. ai.py) — на любом языке.
 Здесь только то, что бот отправляет сам: меню, ошибки, оплата, CTA-строка.
 Чтобы добавить язык, скопируйте один из блоков в STRINGS, CTA, KEYWORDS и COMMANDS.
 """
 import re
-
+ 
 SUPPORTED = ("ru", "tr", "en")
-
+ 
 # Слово, которое пользователь пишет, чтобы открыть полный (платный) разбор.
 KEYWORDS = {"ru": "ГЛУБЖЕ", "tr": "DAHA DERİN", "en": "DEEPER"}
 DEFAULT_KEYWORD = "DEEPER"  # для языков, которых нет в таблице
-
+ 
 # Строка-триггер в конце бесплатного ответа.
 CTA = {
-    "ru": "🔮 Хочешь полный разбор с причинами и прогнозом — напиши: ГЛУБЖЕ",
-    "tr": "🔮 Nedenleri ve tahminiyle tam analizi istiyorsan — yaz: DAHA DERİN",
-    "en": "🔮 Want the full reading with causes and forecast? Write: DEEPER",
+    "ru": "🔮 Карта показала только часть картины. Причина, риски и точный прогноз ждут в полном разборе — напиши: ГЛУБЖЕ",
+    "tr": "🔮 Kart resmin yalnızca bir kısmını gösterdi. Neden, riskler ve net tahmin tam analizde seni bekliyor — yaz: DAHA DERİN",
+    "en": "🔮 The card only showed part of the picture. The reason, the risks and a clear forecast are waiting in the full reading — write: DEEPER",
 }
-
+ 
 COMMANDS = {
     "ru": [("start", "Начать"), ("balance", "Мой баланс"), ("buy", "Купить полные разборы"),
            ("paysupport", "Поддержка по оплате"), ("help", "Помощь")],
@@ -27,34 +27,34 @@ COMMANDS = {
     "en": [("start", "Start"), ("balance", "My balance"), ("buy", "Buy full readings"),
            ("paysupport", "Payment support"), ("help", "Help")],
 }
-
+ 
 # ------------------------------------------------------------------ нормализация
-
+ 
 # Турецкие буквы приводим к ASCII: иначе "İ".lower() даёт два символа и сравнение ломается.
 _TR_MAP = str.maketrans({
     "İ": "i", "I": "i", "ı": "i", "Ş": "s", "ş": "s", "Ğ": "g", "ğ": "g",
     "Ü": "u", "ü": "u", "Ö": "o", "ö": "o", "Ç": "c", "ç": "c",
 })
-
-
+ 
+ 
 def norm(text: str) -> str:
     text = text.translate(_TR_MAP).lower()
     text = re.sub(r"[^\w\s]", " ", text)  # пунктуация и эмодзи
     return " ".join(text.split())
-
-
+ 
+ 
 # Строго точное совпадение: ложное срабатывание списывает платный кредит.
 _DEEPER_WORDS = {norm(v) for v in KEYWORDS.values()} | {"deeper"}
-
-
+ 
+ 
 def is_deeper_request(text: str) -> bool:
     return norm(text) in _DEEPER_WORDS
-
-
+ 
+ 
 def keyword(code: str | None) -> str:
     return KEYWORDS.get((code or "").lower()[:2], DEFAULT_KEYWORD)
-
-
+ 
+ 
 def quick_lang(text: str) -> str | None:
     """Дешёвая эвристика для случаев, когда LLM ещё не вызывали (например, paywall)."""
     if re.search(r"[іїєґІЇЄҐ]", text):
@@ -64,21 +64,21 @@ def quick_lang(text: str) -> str | None:
     if re.search(r"[ğĞışŞİ]", text):
         return "tr"
     return None
-
-
+ 
+ 
 def ui_lang(code: str | None) -> str:
     code = (code or "").lower()[:2]
     return code if code in SUPPORTED else "en"
-
-
+ 
+ 
 def t(lang: str, key: str, **kw) -> str:
     table = STRINGS.get(lang) or STRINGS["en"]
     kw.setdefault("disclaimer", table["disclaimer"])
     return table[key].format(**kw)
-
-
+ 
+ 
 # ------------------------------------------------------------------ тексты
-
+ 
 STRINGS: dict[str, dict[str, str]] = {
     "ru": {
         "disclaimer": "Таро — способ взглянуть на ситуацию по-новому, а не приговор и не замена совета специалиста.",
@@ -288,3 +288,4 @@ STRINGS: dict[str, dict[str, str]] = {
         "paysupport": "For payment and refund questions contact {support}. Please include the date and amount.",
     },
 }
+ 
